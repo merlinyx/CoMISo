@@ -3,7 +3,7 @@
 # please use the CMakeLists_original.cmake which
 # supports all the features of CoMISo
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.11)
 
 project(CoMISo)
 
@@ -15,10 +15,18 @@ add_library(CoMISo STATIC
   Solver/GMM_Tools.hh Solver/GMM_Tools.cc)
 
 target_include_directories(CoMISo PUBLIC
-  "${CMAKE_CURRENT_SOURCE_DIR}/.."
-  "${CMAKE_CURRENT_SOURCE_DIR}/../eigen"
-  "${CMAKE_CURRENT_SOURCE_DIR}/ext/gmm-4.2/include")
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_include_directories(CoMISo PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../eigen>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/eigen>)
+target_include_directories(CoMISo PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ext/gmm-4.2/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ext/gmm-4.2/include>)
+
 target_compile_definitions(CoMISo PUBLIC -DINCLUDE_TEMPLATES)
+
+target_link_libraries(CoMISo PUBLIC Eigen3::Eigen)
 
 # Generate position independent code
 set_target_properties(CoMISo PROPERTIES POSITION_INDEPENDENT_CODE ON)
